@@ -4,38 +4,23 @@ import com.google.gson.annotations.SerializedName;
 
 public class Promotion {
 
-    public static class Image {
-        String id;
-
-        @SerializedName("image_type")
-        String imageType;
-    }
-
-    private String type;
     private String title;
-    private String url;
-    private Image image;
 
-    @SerializedName("short_synopsis")
-    private String shortSynopsis;
+    @SerializedName("brand_title")
+    private String brandTitle;
+
+    @SerializedName("my_image_base_url")
+    private String imageBaseUrl;
 
     public String getTitle() {
         return title;
     }
 
-    public String getUrl() {
-        return url;
+    public String getImageBaseUrl() {
+        return imageBaseUrl;
     }
 
-    public Image getImage() {
-        return image;
-    }
-
-    public String getShortSynopsis() {
-        return shortSynopsis;
-    }
-
-    public String getType() {
-        return type;
+    public String getBrandTitle() {
+        return brandTitle;
     }
 }

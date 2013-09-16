@@ -1,18 +1,29 @@
 package uk.co.polly.volleydemo;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+
 import java.util.List;
 
-public class PromotionListAdapter extends BaseAdapter {
-    private List<Promotion> mPromotions;
+import uk.co.bbc.polly.volleydemo.R;
 
-    public PromotionListAdapter(List<Promotion> promotions) {
+public class PromotionListAdapter extends BaseAdapter {
+    private final ImageLoader.ImageCache mImageCache;
+    private List<Promotion> mPromotions;
+    private RequestQueue mRequestQueue;
+
+    public PromotionListAdapter(List<Promotion> promotions, RequestQueue requestQueue) {
         mPromotions = promotions;
+        mRequestQueue = requestQueue;
+        mImageCache = new MemoryLruImageCache();
     }
 
     @Override
@@ -37,9 +48,19 @@ public class PromotionListAdapter extends BaseAdapter {
         if (view == null) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.promotion_row, null);
         }
-        Promotion promotion = getItem(i);
-        TextView promotionTitleView = (TextView) view.findViewById(R.id.promotion_title);
-        promotionTitleView.setText(promotion.getTitle());
+        final Promotion promotion = getItem(i);
+        final TextView brandTitleView = (TextView) view.findViewById(R.id.brand_title);
+        final TextView titleView = (TextView) view.findViewById(R.id.title);
+        final NetworkImageView networkImageView = (NetworkImageView) view.findViewById(R.id.promotion_image);
+
+        //text
+        brandTitleView.setText(promotion.getBrandTitle());
+        titleView.setText(promotion.getTitle());
+
+        //image
+        String imageUrl = promotion.getImageBaseUrl()+"_320_180.jpg";
+        networkImageView.setImageUrl(imageUrl, new ImageLoader(mRequestQueue, mImageCache));
+
         return view;
     }
 

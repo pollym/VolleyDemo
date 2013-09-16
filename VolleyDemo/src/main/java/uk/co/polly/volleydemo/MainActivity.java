@@ -13,11 +13,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import uk.co.bbc.polly.volleydemo.R;
 
 public class MainActivity extends Activity {
 
-    private static final String TAG = MainActivity.class.getName();
     private RequestQueue mRequestQueue;
 
     @Override
@@ -43,26 +45,16 @@ public class MainActivity extends Activity {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e(TAG, "volley error", error);
-                        Toast.makeText(MainActivity.this, "Oops! Flagrant system error", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Flagrant system error", Toast.LENGTH_LONG).show();
                     }
                 }
         );
         mRequestQueue.add(gsonObjectRequest);
-
     }
 
     private void showPromotions(List<Promotion> promotions) {
-        Toast.makeText(MainActivity.this, "Got "+promotions.size()+" promotions", Toast.LENGTH_LONG).show();
         ListView listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(new PromotionListAdapter(promotions));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        listView.setAdapter(new PromotionListAdapter(promotions, mRequestQueue));
     }
     
 }
