@@ -26,11 +26,13 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        String url = "http://www.bbc.co.uk/iplayer/ion/featured/masterbrand/bbc_radio_one/clips/exclusive/discoverable/1/media_set/android-phone-rtmp-high/recipe/http%3A%2F%2Fextdev.bbc.co.uk%2Fmobile%2Fiplayerradio%2Fiplayerradio.yaml/format/json";
-
         mRequestQueue = Volley.newRequestQueue(this);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        final String url = "http://www.bbc.co.uk/iplayer/ion/featured/masterbrand/bbc_radio_one/clips/exclusive/discoverable/1/media_set/android-phone-rtmp-high/recipe/http%3A%2F%2Fextdev.bbc.co.uk%2Fmobile%2Fiplayerradio%2Fiplayerradio.yaml/format/json";
         final GsonObjectRequest<PromotionList> gsonObjectRequest = new GsonObjectRequest<PromotionList>(Request.Method.GET,
                 url,
                 PromotionList.class,
@@ -49,6 +51,7 @@ public class MainActivity extends Activity {
                     }
                 }
         );
+        gsonObjectRequest.setTag(this);
         mRequestQueue.add(gsonObjectRequest);
     }
 
@@ -56,5 +59,10 @@ public class MainActivity extends Activity {
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(new PromotionListAdapter(promotions, mRequestQueue));
     }
-    
+
+    @Override
+    protected void onStop() {
+        mRequestQueue.cancelAll(this);
+        super.onStop();
+    }
 }
